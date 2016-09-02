@@ -16,7 +16,6 @@
 #include <linux/kref.h>
 #include <linux/usb.h>
 #include <asm/uaccess.h>
-#include <linux/smp_lock.h>
 #include <linux/list.h>
 #include <linux/wait.h>
 #include <linux/cdev.h>

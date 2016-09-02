@@ -272,6 +272,7 @@ static struct usb_class_driver usbdpfp_class = {
     .minor_base = USB_USBDPFP_MINOR_BASE,
 };
 
+static struct mutex drv_mutex;
 
 // Some helper functions.
 
@@ -1864,14 +1865,14 @@ static void usbdpfp_disconnect(struct usb_interface *interface)
         up(&pnp_dev->event_lock);
     }while(0);
 
-    lock_kernel();
+    mutex_lock(&drv_mutex);
     dev = usb_get_intfdata(interface);
     dev->disconnected = 1;
     wake_up(&dev->inq);
 
     usb_set_intfdata(interface, NULL);
     usb_deregister_dev(interface, &usbdpfp_class);
-    unlock_kernel();
+    mutex_unlock(&drv_mutex);
 
     usbdpfp_kref_put(&dev->kref, usbdpfp_delete);
 }
@@ -2261,6 +2262,7 @@ static int __init usbdpfp_init(void)
     INIT_LIST_HEAD(&pnp_dev->reported_events);
     init_MUTEX(&pnp_dev->event_lock);
     init_waitqueue_head(&pnp_dev->wait_queue);
+    mutex_init(&drv_mutex);
 
     //create a memory pool
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,22)
