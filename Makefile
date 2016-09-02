@@ -1,4 +1,4 @@
-# Makefile - usbdpfp kernel module build file for Linux kernel 2.6
+# Makefile - usbdpfp kernel module build file for Linux kernel 2.6 and later
 #
 # Copyright 1996-2011 DigitalPersona, Inc.  All rights reserved.
 #  
@@ -8,36 +8,33 @@
 
 DRIVER_VERSION	:= 2.0.0.6
 
-KDIR	:= /lib/modules/$(shell uname -r)/build 
-PWD	:= $(shell pwd)
-OBJ	:= mod_usbdpfp
+modname := usbdpfp
+obj-m := $(modname).o
 
-obj-m	:= $(OBJ).o
-$(OBJ)-objs	:= usbdpfp.o 
+KVERSION := $(shell uname -r)
+KDIR := /lib/modules/$(KVERSION)/build
+PWD := "$$(pwd)"
 
 EXTRA_CFLAGS	:= -DDRIVER_VERSION=\"v$(DRIVER_VERSION)\"
 
-all:	clean compile
-
-compile:
+default:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
 
-load:	
-	su -c "insmod ./mod_usbdpfp.ko"
-
-load_debug:	
-	@echo "try \"tail -f /var/log/messages\" in another window as root...";
-	su -c "insmod ./mod_usbdpfp.ko debug=1"
-
-load_mdebug:
-	su -c "insmod ./mod_usbdpfp.ko mdebug=1"
-
-unload:
-	-su -c "rmmod -s mod_usbdpfp"
-
 clean:
-	rm -fr $(OBJ).o $(OBJ).ko $(OBJ).*.* .$(OBJ).* .tmp_versions* .*.cmd *.o *~ *.order *.symvers
+	$(MAKE) O=$(PWD) -C $(KDIR) M=$(PWD) clean
 
-debug: unload clean compile load_debug
-	tail -f /var/log/messages
+load:
+	-rmmod $(modname)
+	insmod $(modname).ko
+
+install:
+	mkdir -p /lib/modules/$(KVERSION)/misc/$(modname)
+	install -m 0755 -o root -g root $(modname).ko /lib/modules/$(KVERSION)/misc/$(modname)
+	depmod -a
+
+uninstall:
+	rm /lib/modules/$(KVERSION)/misc/$(modname)/$(modname).ko
+	rmdir /lib/modules/$(KVERSION)/misc/$(modname)
+	rmdir /lib/modules/$(KVERSION)/misc
+	depmod -a
 
