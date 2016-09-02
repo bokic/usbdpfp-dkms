@@ -6,7 +6,7 @@
 # see: linux/Documentation/kbuild/modules.txt for full documenttion on kbuild
 #
 
-DRIVER_VERSION	:= 2.0.0.6
+DRIVER_VERSION	:= 2.0.0.7
 
 modname := usbdpfp
 obj-m := $(modname).o
