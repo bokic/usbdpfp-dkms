@@ -1,0 +1,11 @@
+usbdpfp-dkms (2.0.0.7) unstable; urgency=low
+
+  * Update sources(replace BKL with mutex) so they can compile with latest kernel version.
+
+ -- Boris Barbulovski <boris@inform.mk>  Fri, 2 Sep 2016 11:40:00 +0100
+
+usbdpfp-dkms (2.0.0.6) unstable; urgency=low
+
+  * Initial release
+
+ -- Digital Persona devs <unknown@digitalpersona.com>  2012

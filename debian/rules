@@ -1,0 +1,70 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+DEB_NAME=usbdpfp
+NAME=usbdpfp
+VERSION=2.0.0.7
+
+# source files
+makefile = $(CURDIR)/Makefile
+dkms_conf = $(CURDIR)/dkms.conf
+usbdpfp_c = $(CURDIR)/usbdpfp.c
+usbdpfp_h = $(CURDIR)/usbdpfp.h
+usbdpfpi_h = $(CURDIR)/usbdpfpi.h
+
+# destination dir
+DEST_DIR = $(CURDIR)/debian/$(DEB_NAME)-dkms/usr/src/$(NAME)-$(VERSION)
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch configure-stamp
+
+
+build: build-stamp
+
+build-stamp: configure-stamp 
+	dh_testdir
+	$(MAKE)
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	-$(MAKE) clean
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+	$(MAKE) DESTDIR=$(CURDIR)/debian/$(DEB_NAME)-dkms NAME=$(NAME) VERSION=$(VERSION) install
+	mkdir -m 755 -p $(DEST_DIR)
+	install -m 644 $(makefile) $(DEST_DIR)/Makefile
+	install -m 644 $(dkms_conf) $(DEST_DIR)/dkms.conf
+	install -m 644 $(usbdpfp_c) $(DEST_DIR)/usbdpfp.c
+	install -m 644 $(usbdpfp_h) $(DEST_DIR)/usbdpfp.h
+	install -m 644 $(usbdpfpi_h) $(DEST_DIR)/usbdpfpi.h
+
+binary-arch: build install
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
