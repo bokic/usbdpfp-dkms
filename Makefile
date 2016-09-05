@@ -28,8 +28,7 @@ load:
 	insmod $(modname).ko
 
 install:
-	mkdir -p /lib/modules/$(KVERSION)/misc/$(modname)
-	install -m 0755 -o root -g root $(modname).ko /lib/modules/$(KVERSION)/misc/$(modname)
+	install -m 0644 -o root -g root $(modname).ko /lib/modules/$(KVERSION)/kernel/drivers/misc
 	depmod -a
 
 uninstall:
