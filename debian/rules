@@ -28,14 +28,12 @@ build: build-stamp
 
 build-stamp: configure-stamp 
 	dh_testdir
-	$(MAKE)
 	touch $@
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-	-$(MAKE) clean
 	dh_clean
 
 install: build
@@ -43,7 +41,6 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-	$(MAKE) DESTDIR=$(CURDIR)/debian/$(DEB_NAME)-dkms NAME=$(NAME) VERSION=$(VERSION) install
 	mkdir -m 755 -p $(DEST_DIR)
 	install -m 644 $(makefile) $(DEST_DIR)/Makefile
 	install -m 644 $(dkms_conf) $(DEST_DIR)/dkms.conf
