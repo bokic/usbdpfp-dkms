@@ -14,9 +14,11 @@ dkms_conf = $(CURDIR)/dkms.conf
 usbdpfp_c = $(CURDIR)/usbdpfp.c
 usbdpfp_h = $(CURDIR)/usbdpfp.h
 usbdpfpi_h = $(CURDIR)/usbdpfpi.h
+usbdpfp_rules = $(CURDIR)/40-usbdpfp.rules
 
 # destination dir
 DEST_DIR = $(CURDIR)/debian/$(DEB_NAME)-dkms/usr/src/$(NAME)-$(VERSION)
+RULES_DEST_DIR = $(CURDIR)/debian/$(DEB_NAME)-dkms/etc/udev/rules.d
 
 configure: configure-stamp
 configure-stamp:
@@ -47,6 +49,7 @@ install: build
 	install -m 644 $(usbdpfp_c) $(DEST_DIR)/usbdpfp.c
 	install -m 644 $(usbdpfp_h) $(DEST_DIR)/usbdpfp.h
 	install -m 644 $(usbdpfpi_h) $(DEST_DIR)/usbdpfpi.h
+	install -m 644 $(usbdpfp_rules) $(RULES_DEST_DIR)/40-usbdpfp.rules
 
 binary-arch: build install
 
