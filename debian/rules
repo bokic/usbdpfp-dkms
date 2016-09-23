@@ -44,6 +44,7 @@ install: build
 	dh_prep
 	dh_installdirs
 	mkdir -m 755 -p $(DEST_DIR)
+	mkdir -m 755 -p $(RULES_DEST_DIR)
 	install -m 644 $(makefile) $(DEST_DIR)/Makefile
 	install -m 644 $(dkms_conf) $(DEST_DIR)/dkms.conf
 	install -m 644 $(usbdpfp_c) $(DEST_DIR)/usbdpfp.c
