@@ -32,8 +32,6 @@ install:
 	depmod -a
 
 uninstall:
-	rm /lib/modules/$(KVERSION)/misc/$(modname)/$(modname).ko
-	rmdir /lib/modules/$(KVERSION)/misc/$(modname)
-	rmdir /lib/modules/$(KVERSION)/misc
+	rm /lib/modules/$(KVERSION)/kernel/drivers/misc/$(modname).ko
 	depmod -a
 
